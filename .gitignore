@@ -1,0 +1,6 @@
+/in/*
+/out/*
+/rsync-to-diskstation.sh
+/copy-to-bitnami-wp.sh
+/mvGps.sh
+
