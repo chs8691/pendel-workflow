@@ -1,4 +1,8 @@
-# Upload files to earls5
+#!/bin/bash
+# Upload files to host
+# There must be a file 'credentials' with two line:
+# host-username yourusername
+# host-password yourtopsecretpassword
 IN="/home/chris/pendel/in/$1"
 OUT="/home/chris/pendel/out"
 
@@ -21,15 +25,9 @@ done
 # ...and the gps.csv
 files[i]="$OUT/gps.csv"
 
-#for file in "${files[@]}"; do
-#  echo "$file"
-# done
-#echo "${files[0]}"
-#echo "${files[1]}"
-#echo "${files[2]}"
-#exit 0
-export SSHPASS=topsecretpassword
-sshpass -e sftp -oBatchMode=no -b - user@host << ! 
+export SSHPASS=$(grep -Po "(?<=^host-password ).*" credentials)
+username=$(grep -Po "(?<=^host-username ).*" credentials)
+sshpass -e sftp -oBatchMode=no -b - $username@menkent.uberspace.de << ! 
     cd html/pendel/wp-content/uploads/pendel/ffm
     put "${files[0]}"
     put "${files[1]}"

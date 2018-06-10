@@ -1,3 +1,4 @@
+#!/bin/bash
 SRC="/home/chris/egh/photo/02_Progress/pendel"
 DST="/home/chris/pendel/in"
 
@@ -16,7 +17,7 @@ if [ ! -e $DST/$1 ]
 fi
 
 # Copy images from final
-i=0
+i=0 
 for file in $SRC/$1/final/*.jpg; do  
     imgs[i]="$file"
     (( ++i )) 

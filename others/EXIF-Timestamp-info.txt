@@ -1,0 +1,43 @@
+Organisation
+============
+Auf eghMate werden die Dateien in /home/chris/pendel gepflegt und per rsync auf 
+diskstation://chrisDok/Projekte/Pendel/Pendel gespiegelt
+Die Skripte werden auf eghMate ausgeführt und liegen nur als Backup auf der Diskstation.
+
+
+Tiles
+=====
+Tile ist 500 x 500 Auschnitt als 100x100 gespeichert. Ohne GPS-Informationen. 
+
+GPS in Datei extrahieren
+========================
+Wenn alle jpg in direkten Unterverzeichnissen liegen und mit einer Zahl anfagen, kann so eine Datei mit GPS-Location erstellt werden:
+find /media/diskstation/chrisDok/Projekte/Pendel/Pendel -regex /media/diskstation/chrisDok/Projekte/Pendel/Pendel/[0-9][0-9][0-9]/[0-9].*\.jpg | xargs  exiftool -filename -gpsposition -n -s -t -S -q -f > /media/diskstation/chrisDok/Projekte/Pendel/Pendel/gps.csv
+
+Da ein shell/Skript nicht auf der Diskstation aufgefuehrt ist, liegt create_gps_file.sh als Kopie im Wordpress-Pendel/Verzeichnis auf kub.
+
+
+EXIF und Zeitdifferenz
+======================
+Relevant ist createdatetime und gpsdatetime. In den GPX-Tracks habe ich keine Zeitzone gefunden (gpx, tcx von Polar als auch der Tracker-App)
+
+Korrektur der Exif-Zeit
+-----------------------
+Bsp. GPX um eine Stunde vor. Ermitteln:
+exiftool -createdate img.jpg --> ...2017:08:23 07:43:21                  
+head -c 200 001.gpx          --> ...<time>2017-08-23T08:42:58.000Z</time>
+
+Korrektur der Exifzeit um eine Stunden nach vorne:
+exiftool -datetimeoriginal+=1 -createdate+=1 20170823-074258-DSCF5765.jpg 
+
+Zeitzone
+------- 
+exiftool verwendet beim geotaggen die Timezone des Rechners für die Bild-Zeit, wenn keine Zeitzone im exif gesetzt ist.
+Um die Verwendung der Rechner-Zeitzone zu unterbinden, muss man createdate explizit ohne Zeitzone für GPS-Tagging verwenden:
+exiftool -geotag Christian_Schulzendorff_2017-08-23_06-54-06.gpx '-geotime<${createdate}+00:00'  20170823-074258-DSCF5765.jpg
+Als Kopiervorlage
+exiftool -geotag  '-geotime<${createdate}+00:00'  
+
+
+
+   

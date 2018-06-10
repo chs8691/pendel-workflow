@@ -1,3 +1,4 @@
+#!/bin/bash
 IN="/home/chris/pendel/in"
 OUT="/home/chris/pendel/out"
 
